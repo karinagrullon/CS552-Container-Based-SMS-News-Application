@@ -1,7 +1,25 @@
+from turtle import title
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
 
+#news api
+from newsapi.newsapi_client import NewsApiClient
+newsapi = NewsApiClient(api_key='b29884325c374de6a4c78d5e7d894226')
+# keyword = input("Please enter the keyword to search the news for : ")
+
+
+# Twilio
 app = Flask(__name__)
+
+
+class articles: 
+    def __init__(self, source, title, description, website, publishedAt): 
+        self.source = source 
+        self.title = title
+        self.description = description
+        self.website = website
+        self.publishedAt = publishedAt
+
 
 @app.route("/sms", methods=['GET', 'POST'])
 def incoming_sms():
@@ -13,41 +31,30 @@ def incoming_sms():
     resp = MessagingResponse()
 
     # Determine the right reply for this message
-    if body == 'SMSNews' or body == 'smsnews' or body == 'SMSnews' or body == 'Smsnews':
-        resp.message('''
-        Thank you for using SMS News. Please choose from the following options to make a news request: 
-        - Latest (all)
-        - World
-        - US
-        - Politics
-        - Business
-        - Tech
-        - Health
-        - Sports
-        - Art
-        - Fashion
-        ''')
-    elif body == 'Latest':
-        resp.message("You have chosen: Latest")
-    elif body == 'World':
-        resp.message("You have chosen: World")
-    elif body == 'US' or body == 'Us':
-        resp.message("You have chosen: US")
-    elif body == 'Politics':
-        resp.message("You have chosen: Politics")
-    elif body == 'Business':
-        resp.message("You have chosen: Business")
-    elif body == 'Tech':
-        resp.message("You have chosen: Tech")
-    elif body == 'Health':
-        resp.message("You have chosen: Health")
-    elif body == 'Sports':
-        resp.message("You have chosen: Sports")
-    elif body == 'Art':
-        resp.message("You have chosen: Art")
-    elif body == 'Fashion':
-        resp.message("You have chosen: Fashion")
 
+    all_articles = newsapi.get_everything(q = body.strip(), language='en')
+
+    data = [] 
+
+
+    for article in all_articles['articles'][:5]:
+        data.append(articles(article['source']['name'], article['title'], article['description'], article['url'], article['publishedAt']))
+
+    c = 0
+
+    for arti in data[:5]:
+        c = c+1
+        resp.message('''
+
+        News <'''+ str(c) +'''/5>\n''' + arti.publishedAt + 
+       '''
+       \n Title: ''' + arti.title +
+         '''\n Description: '''  + arti.description +
+         '''
+         \n Source: '''  + arti.source +
+        '''\n Website: ''' + arti.website)
+        
+    
     return str(resp)
 
 if __name__ == "__main__":
