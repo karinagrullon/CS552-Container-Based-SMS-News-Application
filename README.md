@@ -10,10 +10,10 @@ In order to complete this project we are planning to use a communications tool A
 
 ## Platforms
 
-Python
-Twilio API
-[News Media API]
-Docker
-Kubernetes
+- Python
+- [Twilio API](https://www.twilio.com/)
+- [News API](https://newsapi.org/)
+- Docker
+- Kubernetes
 
 
