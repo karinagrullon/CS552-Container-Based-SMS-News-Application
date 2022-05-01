@@ -5,7 +5,7 @@ metadata:
   labels:
     app: flaskweb
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: flaskweb
@@ -17,5 +17,9 @@ spec:
       containers:
       - name: flaskweb
         image: flaskweb:v1
+        imagePullPolicy: Never
         ports:
         - containerPort: 5000
+        resources:
+          requests:
+            cpu: "100m"
