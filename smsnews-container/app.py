@@ -3,7 +3,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 #news api
 from newsapi.newsapi_client import NewsApiClient
-newsapi = NewsApiClient(api_key='[YOUR-NEWS-APLI-KEY]')
+newsapi = NewsApiClient(api_key='[YOUR-NEWS-API-KEY]')
 # keyword = input("Please enter the keyword to search the news for : ")
 
 
